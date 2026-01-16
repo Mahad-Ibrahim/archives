@@ -17,27 +17,9 @@ If you are here to learn or just view my repository, feel free to look around. Y
 
 .. toctree::
    :maxdepth: 2
-   :caption:  Linux Kernel Journey
+   :caption: Navigation
 
    kernel/index
-   kernel/daily_log
-
-.. toctree::
-   :maxdepth: 2
-   :caption:  Engineering Projects
-
-   projects/tartarus_gate/index
-   projects/mini_siem/index
-
-.. toctree::
-   :maxdepth: 2
-   :caption:  Security & Malware
-
-   security/evasion/index
-   security/reversing/index
-
-.. toctree::
-   :maxdepth: 2
-   :caption:  The Dev Journal
-
+   projects/index
+   security/index
    journal/index

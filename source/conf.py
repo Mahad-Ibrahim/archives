@@ -18,9 +18,23 @@ html_theme_options = {
     "color_mode": "dark",       # Forces Dark Mode (No toggle needed)
     "accent_color": "cyan",     # Gives you that "Tron/Hacker" glow
     "github_url": "https://github.com/Mahad-Ibrahim",
-    "nav_links": [
-        { "title": "Kernel", "url": "kernel/index" },
-        { "title": "Projects", "url": "projects/index" },
+"nav_links": [
+        {
+            "title": "Kernel",
+            "url": "kernel/index"
+        },
+        {
+            "title": "Projects",
+            "url": "projects/index"
+        },
+        {
+            "title": "Security",
+            "url": "security/index"
+        },
+        {
+            "title": "Journal",
+            "url": "journal/index"
+        },
     ]
 }
 
