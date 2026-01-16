@@ -277,51 +277,67 @@ main {
     will-change: transform, opacity, filter;
 }
 
+/* --- 10. MOBILE POLISH (FINAL PRODUCTION) --- */
+@media screen and (max-width: 768px) {
 
-
-/* --- 10. MOBILE OPTIMIZATION (ULTRA COMPACT / TERMUX STYLE) --- */
-@media (max-width: 768px) {
-    /* 1. Logo: Keep it tiny */
-    .sy-head-brand {
-        font-size: 0.9rem !important; 
-        white-space: nowrap !important;
-    }
-
-    /* 2. Page Titles: drastically smaller to prevent wrapping/shouting */
-    h1 {
-        font-size: 1.15rem !important; /* Barely larger than body text */
-        font-weight: 700 !important;
-        line-height: 1.2 !important;
-        margin-bottom: 0.75rem !important;
-        overflow-wrap: break-word;
-    }
-    
-    /* 3. Body Text: The "Real Terminal" size (approx 13px) */
-    p, li, .admonition {
-        font-size: 0.85rem !important; 
-        line-height: 1.45 !important; /* Tight but readable */
-    }
-
-    /* 4. Layout: Give it more side padding to avoid the "cramped" look */
-    .sy-container {
-        width: 100% !important;
-        padding: 0 1.2rem !important; 
-    }
-
-    /* 5. Performance: Kill all glass effects for smoother scrolling */
-    .admonition {
-        backdrop-filter: none !important;
-        background: rgba(20, 30, 35, 1) !important; /* 100% Solid opacity */
-        box-shadow: none !important;
-        border: 1px solid rgba(0, 255, 225, 0.15) !important;
-    }
-
-    /* 6. Breadcrumbs: Hide on mobile (Cleaner) */
-    .sy-breadcrumbs {
+    /* 1. HIDE NAVIGATION & FOOTERS */
+    .sy-breadcrumbs, 
+    .sy-breadcrumb-nav,
+    .sy-head-nav,
+    .sy-foot,
+    .bottom-nav {
         display: none !important;
     }
 
+    /* 2. THE ROOT CONTAINER NUKE (Keep it flushed) */
+    html, body, .sy-layout, .sy-page {
+        overflow-x: hidden !important;
+        width: 100vw !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* 3. THE INNER DIV STRIPPER */
+    .sy-container,
+    .sy-container > div,
+    .sy-container div {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* 4. THE GOLDEN BUFFER (8px Safety Zone) */
+    /* Added '.sy-head .sy-container' to the list so the logo aligns with text */
+    article, 
+    .yue, 
+    main,
+    .sy-head .sy-container,
+    .sy-head-nav {
+        padding-left: 0.5rem !important;  /* 8px alignment */
+        padding-right: 0.5rem !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+
+    /* 5. HEADER ALIGNMENT */
+    h1, .sy-prose h1 {
+        margin-top: 0.75rem !important;
+        font-size: 1.4rem !important;
+        line-height: 1.2 !important;
+        padding-left: 0.5rem !important; /* Match the text buffer */
+    }
+    
+    /* 6. ADMONITION/NOTE FIX */
+    /* Ensure the "Note" boxes don't stick to the edges either */
+    .admonition, .topic {
+        margin-left: 0.5rem !important;
+        margin-right: 0.5rem !important;
+        width: auto !important;
+    }
 }
+
 
 /* --- 12. NAVIGATION HIDE (CONFIRMED) --- */
 
