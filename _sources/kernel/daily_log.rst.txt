@@ -1,0 +1,4 @@
+Daily Log
+=========
+
+Coming soon...

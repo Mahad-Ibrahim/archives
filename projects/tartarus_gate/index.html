@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="cyan" data-content_root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Project Tartarus: Advanced Windows Implant Architecture - mahad@archives documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Mini SIEM" href="../mini_siem/index.html" /><link rel="prev" title="Daily Log" href="../../kernel/daily_log.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"dark");
+  </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../../_static/shibuya.css?v=44020203" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=0dbc41d1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Project Tartarus: Advanced Windows Implant Architecture"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../index.html">
+      
+      
+      <strong>mahad@archives</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../../kernel/index.html">Kernel</a></li><li class="link"><a href="../index.html">Projects</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/Mahad-Ibrahim" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Linux Kernel Journey</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Linux Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/daily_log.html">Daily Log</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Engineering Projects</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Project Tartarus: Advanced Windows Implant Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mini_siem/index.html">Mini SIEM</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Security &amp; Malware</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../security/evasion/index.html">Evasion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/reversing/index.html">Reversing</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">The Dev Journal</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#access-and-project-status">Access and Project Status</a></li>
+<li><a class="reference internal" href="#complete-system-architecture">Complete System Architecture</a></li>
+<li><a class="reference internal" href="#proof-of-concept">Proof of Concept</a><ul>
+<li><a class="reference internal" href="#key-technical-features">Key Technical Features</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#x64-tartarus-gate">x64 Tartarus Gate</a><ul>
+<li><a class="reference internal" href="#the-peb-walk">1. The PEB Walk</a></li>
+<li><a class="reference internal" href="#syscall-resolution">2. Syscall Resolution</a></li>
+<li><a class="reference internal" href="#syscall-execution">3. Syscall Execution</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#required-functions-for-shellcode">Required Functions for Shellcode</a></li>
+<li><a class="reference internal" href="#x64-wininet-stager-poc">x64 WinINet Stager (PoC)</a><ul>
+<li><a class="reference internal" href="#key-features">Key Features</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#disclaimer">Disclaimer</a></li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">mahad@archives</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Project Tartarus: Advanced Windows Implant Architecture</strong>
+        <meta itemprop="position" content="2" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue" role="main">
+          <section id="project-tartarus-advanced-windows-implant-architecture">
+<h1>Project Tartarus: Advanced Windows Implant Architecture<a class="headerlink" href="#project-tartarus-advanced-windows-implant-architecture" title="Link to this heading">¶</a></h1>
+<p><em>A custom-built Adversary Emulation framework focusing on x64 syscall evasion and OS internals.</em></p>
+<section id="access-and-project-status">
+<h2>Access and Project Status<a class="headerlink" href="#access-and-project-status" title="Link to this heading">¶</a></h2>
+<p>While this repository hosts the source code for the core Implant Engine (Tartarus Gate) and the Assembly Network Stager, these are individual components of a larger, fully integrated Advanced Persistent Threat (APT) simulation.</p>
+<p>The complete project—including the multi-hop C2 infrastructure, persistence mechanisms, and logic integration—is fully functional and complete. However, due to the sensitive nature of the code and the potential for misuse, the full source code is hosted in a private repository.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>I am happy to provide access to the full private repository or a walkthrough of the complete architecture upon request for interview and verification purposes. Please contact me directly to arrange access.</p>
+</div>
+</section>
+<section id="complete-system-architecture">
+<h2>Complete System Architecture<a class="headerlink" href="#complete-system-architecture" title="Link to this heading">¶</a></h2>
+<p>The following diagram illustrates the execution flow of the Tartarus Gate engine, from initial PEB walking to final syscall execution and C2 communication.</p>
+<img alt="Tartarus Architecture Diagram" class="no-scaled-link align-center" src="../../_images/Architecture-Diagram.png" />
+<p><em>Figure 1: High-level execution flow of the implant engine and network stager.</em></p>
+</section>
+<section id="proof-of-concept">
+<h2>Proof of Concept<a class="headerlink" href="#proof-of-concept" title="Link to this heading">¶</a></h2>
+<p>A PoC x64 Windows implant that makes an HTTP POST request using direct syscalls and manual <a class="reference external" href="https://learn.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb">PEB</a> walking. Made to bypass user-mode API hooks by EDR/AV.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This project was made for educational and research purposes only, attempting to showcase modern evasion techniques and Windows OS internals.</p>
+</div>
+<section id="key-technical-features">
+<h3>Key Technical Features<a class="headerlink" href="#key-technical-features" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Direct Syscall Execution:</strong> Uses the <a class="reference external" href="https://redops.at/en/blog/exploring-hells-gate">Tartarus Gate/Hell’s Gate</a> technique to find System Service Numbers (SSNs) while the program runs. This allows it to bypass antivirus hooks on <code class="docutils literal notranslate"><span class="pre">Nt*</span></code> functions.</p></li>
+<li><p><strong>Position Independent Code (PIC):</strong> The code works from any memory address. It manually walks through the PEB and Kernel32.dll to find <a class="reference external" href="https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress">GetProcAddress</a>.</p></li>
+<li><p><strong>Wininet via Assembly:</strong> It uses <code class="docutils literal notranslate"><span class="pre">GetProcAddress</span></code> to find the addresses of key networking functions.</p></li>
+</ul>
+</section>
+</section>
+<section id="x64-tartarus-gate">
+<h2>x64 Tartarus Gate<a class="headerlink" href="#x64-tartarus-gate" title="Link to this heading">¶</a></h2>
+<img alt="Language" src="https://img.shields.io/badge/Language-C%20%2F%20x64_Assembly-blue" />
+<img alt="Platform" src="https://img.shields.io/badge/Platform-Windows-0078D6" />
+<img alt="Technique" src="https://img.shields.io/badge/Technique-Direct_Syscalls-red" />
+<p>The source code for this is inside <code class="docutils literal notranslate"><span class="pre">main.c</span></code>.</p>
+<section id="the-peb-walk">
+<h3>1. The PEB Walk<a class="headerlink" href="#the-peb-walk" title="Link to this heading">¶</a></h3>
+<p>To avoid calling functions that might be monitored by antivirus software (AV/EDR), the loader does the following steps instead of using standard APIs:</p>
+<ol class="arabic">
+<li><p><strong>Reads the GS register</strong> to find the <a class="reference external" href="https://learn.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-teb">TEB (Thread Environment Block)</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In x86_64 Windows, the GS register is used to point to the current Thread Environment Block (TEB).</p>
+</div>
+</li>
+<li><p><strong>Finds the PEB pointer</strong> inside the TEB at offset <code class="docutils literal notranslate"><span class="pre">0x60</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>At offset 60h, there is a pointer named <code class="docutils literal notranslate"><span class="pre">PPEB</span> <span class="pre">ProcessEnvironmentBlock</span></code>.</p>
+</div>
+</li>
+<li><p><strong>Finds the</strong> <code class="docutils literal notranslate"><span class="pre">PPEB_LDR_DATA</span></code> inside the PEB.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Reference: <a class="reference external" href="https://learn.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb_ldr_data">PEB_LDR_DATA Structure</a></p>
+</div>
+</li>
+<li><p><strong>Loops through the</strong> <code class="docutils literal notranslate"><span class="pre">InMemoryOrderModuleList</span></code> to find the target DLL.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">InMemoryOrderModuleList</span></code> is a structure inside <code class="docutils literal notranslate"><span class="pre">PEB_LDR_DATA</span></code>. It is a doubly linked list that connects all loaded modules. This is known as an <a class="reference external" href="https://www.data-structures-in-practice.com/intrusive-linked-lists/">intrusive linked list</a>.</p>
+</div>
+</li>
+<li><p><strong>Gets the Base Address:</strong> Once it identifies the correct DLL (using <code class="docutils literal notranslate"><span class="pre">UNICODE_STRING</span> <span class="pre">FullDllName</span></code>), the loader gets the <code class="docutils literal notranslate"><span class="pre">PVOID</span> <span class="pre">DllBase</span></code> from the <code class="docutils literal notranslate"><span class="pre">_LDR_DATA_TABLE_ENTRY</span></code>.</p></li>
+</ol>
+</section>
+<section id="syscall-resolution">
+<h3>2. Syscall Resolution<a class="headerlink" href="#syscall-resolution" title="Link to this heading">¶</a></h3>
+<p>After finding the DLL base address, the loader reads the Export Address Table (EAT) of the PE file.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The steps below explain how we move through the PE file. For a complete guide on the PE File format, I recommend <a class="reference external" href="https://0xrick.github.io/win-internals/pe2/">0xRick’s Blog</a>.</p>
+</div>
+<ol class="arabic simple">
+<li><p><strong>Bypass the</strong> <a class="reference external" href="https://0xrick.github.io/win-internals/pe3/">DOS headers</a> by reading the 4-byte value at offset <code class="docutils literal notranslate"><span class="pre">0x3C</span></code>.</p></li>
+<li><p><strong>Find the Optional Header:</strong> From <code class="docutils literal notranslate"><span class="pre">NtHeaders</span></code>, we go to the <code class="docutils literal notranslate"><span class="pre">IMAGE_OPTIONAL_HEADER64</span></code>.</p></li>
+<li><p><strong>Access Data Directories:</strong> Inside the Optional Header, we look for <code class="docutils literal notranslate"><span class="pre">IMAGE_DATA_DIRECTORY</span> <span class="pre">DataDirectory</span></code>.</p></li>
+<li><p><strong>Read the Export Table:</strong> We calculate the offset from <code class="docutils literal notranslate"><span class="pre">DataDirectory[0]</span></code> to land at the <a class="reference external" href="https://ferreirasc.github.io/PE-Export-Address-Table/">Export Address Table (EAT)</a>.</p></li>
+<li><p><strong>Read EAT Arrays:</strong> We look at three arrays to find the SSNs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AddressOfFunctions</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AddressOfNames</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AddressOfNameOrdinals</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>The “Gate” Check (Tartarus Gate):</strong></p>
+<ul class="simple">
+<li><p>We calculate where the function is in memory.</p></li>
+<li><p><strong>Hook Check:</strong> We check the first few bytes. If the code starts with a <code class="docutils literal notranslate"><span class="pre">jmp</span></code> (which means it is hooked), we do not use it.</p></li>
+<li><p><strong>Neighbor Scan:</strong> We scan memory 32 bytes up and down to find a “clean” neighbor.</p></li>
+<li><p><strong>SSN Calculation:</strong> Once we find a clean neighbor, we calculate the SSN of our target function.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="syscall-execution">
+<h3>3. Syscall Execution<a class="headerlink" href="#syscall-execution" title="Link to this heading">¶</a></h3>
+<p>After we have the SSN, we execute it using a custom assembly stub.</p>
+<ol class="arabic simple">
+<li><p><strong>ABI Compliance:</strong> We follow the <a class="reference external" href="https://learn.microsoft.com/en-us/cpp/build/x64-calling-convention?view=msvc-170">Windows x64 calling convention</a>.</p></li>
+<li><p><strong>Register Adjustment:</strong> The <code class="docutils literal notranslate"><span class="pre">syscall</span></code> instruction overwrites <code class="docutils literal notranslate"><span class="pre">rcx</span></code> (it saves <code class="docutils literal notranslate"><span class="pre">rip</span></code> to <code class="docutils literal notranslate"><span class="pre">rcx</span></code>). Because of this, we must move the first argument from <code class="docutils literal notranslate"><span class="pre">rcx</span></code> to <code class="docutils literal notranslate"><span class="pre">r10</span></code> before we run the command.</p></li>
+<li><p><strong>Execution:</strong> We run the <code class="docutils literal notranslate"><span class="pre">syscall</span></code> instruction.</p></li>
+</ol>
+</section>
+</section>
+<section id="required-functions-for-shellcode">
+<h2>Required Functions for Shellcode<a class="headerlink" href="#required-functions-for-shellcode" title="Link to this heading">¶</a></h2>
+<p>Using the <strong>Tartarus Gate</strong> technique described above, the beacon dynamically finds the System Service Numbers (SSNs) for four specific functions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NtAllocateVirtualMemory</span></code>: Allocates a new space in memory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NtWriteVirtualMemory</span></code>: Writes payload data into the allocated memory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NtProtectVirtualMemory</span></code>: Changes permissions to “Read/Execute” (RX) to avoid DEP.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NtCreateThreadEx</span></code>: Executes the shellcode in a separate thread.</p></li>
+</ul>
+</section>
+<section id="x64-wininet-stager-poc">
+<h2>x64 WinINet Stager (PoC)<a class="headerlink" href="#x64-wininet-stager-poc" title="Link to this heading">¶</a></h2>
+<img alt="Language" src="https://img.shields.io/badge/Language-MASM_x64-red" />
+<img alt="Platform" src="https://img.shields.io/badge/Platform-Windows-0078D6" />
+<img alt="Technique" src="https://img.shields.io/badge/Technique-Shellcode_Style-yellow" />
+<p>The source code for this is inside <code class="docutils literal notranslate"><span class="pre">httpRequestSenderShellcode.asm</span></code>.</p>
+<p>This is a pure x64 Assembly program that sends an HTTP POST request. It is a Proof-of-Concept (PoC) that shows how to use Windows APIs (<code class="docutils literal notranslate"><span class="pre">WinINet</span></code>) without using standard imports or the <code class="docutils literal notranslate"><span class="pre">.data</span></code> section.</p>
+<section id="key-features">
+<h3>Key Features<a class="headerlink" href="#key-features" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>No Static Imports:</strong> The program has an empty Import Address Table (IAT).</p></li>
+<li><p><strong>Manual PEB Walk:</strong> It finds <code class="docutils literal notranslate"><span class="pre">kernel32.dll</span></code> by reading the Process Environment Block (PEB).</p></li>
+<li><p><strong>Stack Strings:</strong> All strings (like DLL names, function names) are built on the stack while the program runs.</p></li>
+</ul>
+</section>
+</section>
+<section id="disclaimer">
+<h2>Disclaimer<a class="headerlink" href="#disclaimer" title="Link to this heading">¶</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This software is provided for educational purposes only. It demonstrates operating system internals and modern evasion techniques. The author is not responsible for any misuse of this code.</p>
+</div>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="../../kernel/daily_log.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Daily Log</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="../mini_siem/index.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Mini SIEM</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2026, Mahad Ibrahim</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/Mahad-Ibrahim" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/shibuya.js?v=cac61aee"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+      <script defer="defer" src="../../_static/js/smooth_scroll.js?v=5f731fdf"></script></body>
+</html>

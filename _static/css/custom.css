@@ -1,0 +1,317 @@
+/* ==========================================================================
+   SYSTEMS ENGINEERING LOG - PRODUCTION CSS (DOCUMENTED)
+   Version: 3.0 (Final)
+   Theme: Shibuya (Cyberpunk Override)
+   
+   HOW TO USE THIS FILE:
+   1. The ":root" section controls all colors and fonts. Change them there.
+   2. The "Layout" section controls how wide the page is.
+   3. The "Component" sections fix specific elements like headers and links.
+   ========================================================================== */
+
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@4.2.1/index.min.css');
+
+/* Import JetBrains Mono (For Code Blocks) - The "Pro" Choice */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+    /* Main Text & Headers = Cascadia Code */
+    --sy-f-text:    'Cascadia Code', 'Consolas', monospace !important;
+    --sy-f-heading: 'Cascadia Code', 'Consolas', monospace !important;
+    
+    /* Code Blocks = JetBrains Mono */
+    --sy-f-mono:    'JetBrains Mono', 'Consolas', monospace !important;
+    
+    --sy-f-size:    15px;
+
+    /* PALETTE */
+    --neon-cyan:    #00ffe1;
+    --neon-white:   #ffffff;
+    --neon-glow-1:  rgba(0, 255, 225, 0.8);
+    --neon-glow-2:  rgba(0, 255, 225, 0.5);
+    
+    /* Shibuya Overrides */
+    --sy-c-link:       var(--neon-cyan);
+    --sy-c-link-hover: var(--neon-white);
+}
+
+/* --- 2. LAYOUT ENGINE (COMPACT / FLUSH) --- */
+.sy-container {
+    max-width: none !important;
+    
+    /* 1. WIDER CANVAS: Use 96% of the screen (was 94%) */
+    width: 96% !important;      
+    margin: 0 auto !important;
+    
+    /* 2. FLUSH EDGES: Reduced padding so it hugs the left side */
+    padding: 0 1rem !important; 
+}
+
+/* Grid System: Sidebar | Content | TOC */
+@media (min-width: 768px) {
+    .sy-layout {
+        display: grid;
+        
+        /* 3. TIGHTER SIDEBAR: 
+           Changed 18rem -> 13rem. 
+           This gives 5rem (80px) back to your main content. */
+        grid-template-columns: 13rem 1fr 16rem !important;
+        
+        /* 4. REDUCED GAP:
+           Changed 3rem -> 2rem.
+           Brings the content closer to the sidebar. */
+        gap: 2rem; 
+    }
+}
+
+
+/* --- 4. COMPONENT: HEADER & BRAND (THE SURGICAL FIX) --- */
+/* TARGETS: The Title (.sy-head-brand) and Page Headers (h1) */
+.sy-head-brand,
+.sy-head-brand span,
+h1,          /* Added raw h1 just in case */
+h1 code, 
+h1 code span, 
+h1 cite, 
+h1 cite span {
+    font-family: 'Cascadia Code', monospace !important;
+    font-weight: 700 !important;
+    font-style: normal !important;
+    text-decoration: none !important;
+    background: transparent !important;
+    border: none !important;
+    color: var(--neon-white) !important;
+    
+    /* THE PASSIVE GLOW */
+    text-shadow: 
+        0 0 5px var(--neon-glow-1),
+        0 0 15px var(--neon-glow-2);
+
+    /* --- THE SMOOTH FIX --- */
+    /* This ensures the color and shadow FADE instead of SNAP */
+    transition: all 0.4s ease-in-out !important;
+}
+
+/* HOVER STATE: Super Saiyan White */
+.sy-head-brand:hover,
+h1:hover,       /* Ensure hover triggers on the container too */
+h1:hover code, 
+h1:hover cite {
+    color: var(--neon-white) !important;
+    
+    /* The Intense Glow */
+    text-shadow: 
+        0 0 2px rgba(0, 255, 225, 1),
+        0 0 6px rgba(0, 255, 225, 0.8),
+        0 0 12px rgba(0, 255, 225, 0.5);
+        
+    cursor: default;
+}
+
+/* Restore pointer for the clickable brand logo */
+.sy-head-brand:hover {
+    cursor: pointer;
+}
+
+
+
+/* --- 5. COMPONENT: NAVIGATION SIDEBAR --- */
+/* This styles the "Active" page in the left sidebar */
+.sy-nav-link.current {
+    /* Adds the vertical Cyan line on the left */
+    border-left: 3px solid var(--neon-cyan);
+    
+    /* Makes the active link text glow */
+    text-shadow: 0 0 8px rgba(0, 255, 225, 0.6) !important;
+    color: #fff !important;
+}
+
+/* --- 6. COMPONENT: HYPERLINKS (HIGH SPECIFICITY) --- */
+
+/* 1. Base Link Style (Generic) */
+a {
+    transition: color 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
+}
+
+/* 2. FORCED OVERRIDE (The Fix) */
+/* We target the specific containers (prose, footer, sidebar) 
+   to beat the theme's default white/grey rules. */
+a, 
+.sy-prose a,           /* Links in text paragraphs/lists */
+.sy-foot a,            /* Links in the footer */
+.sy-head-nav a,        /* Links in the header */
+a:visited, 
+.sy-prose a:visited {
+    color: var(--sy-c-link) !important;       /* FORCE NEON CYAN */
+    text-decoration: none !important;         /* FORCE NO UNDERLINE */
+}
+
+/* 3. Hover State */
+a:hover,
+.sy-prose a:hover,
+.sy-foot a:hover {
+    color: var(--sy-c-link-hover) !important; /* FORCE WHITE */
+    text-shadow: 0 0 8px var(--neon-glow-1) !important;
+    cursor: pointer;
+}
+/* Hover State */
+a:hover {
+    color: var(--sy-c-link-hover);
+    text-shadow: 0 0 8px var(--neon-glow-1);
+    
+    /* Ensure the transition applies to the glow too */
+    transition: color 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
+}
+
+/* --- 7. UX ENHANCEMENTS --- */
+html {
+    /* CRITICAL: This MUST be 'auto'. 
+       If it is 'smooth', it fights with the JS and causes the "Jump/Lag". */
+    scroll-behavior: auto !important; 
+    
+}
+
+/* --- 8. CONTENT POLISH (THE MILITARY HUD UI - FINAL) --- */
+
+/* A. THE CONTAINER (Glass Box with Tint) */
+.admonition {
+    /* 1. VISIBILITY */
+    background: rgba(20, 30, 35, 0.7) !important; 
+    
+    /* 2. BLUR */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    /* 3. BORDER */
+    border: 1px solid rgba(0, 255, 225, 0.3) !important;
+    border-left-width: 0 !important;
+    border-radius: 4px !important;
+    
+    /* 4. DEPTH */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 
+                inset 0 0 20px rgba(0, 255, 225, 0.05);
+                
+    margin-bottom: 2rem !important;
+}
+
+/* B. THE TITLE (The Solid Label) */
+.admonition .admonition-title {
+    background: rgba(0, 255, 225, 0.1) !important;
+    border-bottom: 1px solid rgba(0, 255, 225, 0.3);
+    color: var(--neon-cyan) !important;
+    
+    font-weight: 800 !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 0.5rem 1rem !important;
+    margin: 0 !important; /* Keep it flush to the top edges */
+    
+    /* Round top corners only */
+    border-top-left-radius: 3px !important;
+    border-top-right-radius: 3px !important;
+    
+    display: flex;
+    align-items: center;
+}
+
+/* C. THE CONTENT (Fixing the cramped text) */
+/* Select everything inside the box that is NOT the title */
+.admonition > *:not(.admonition-title) {
+    margin-top: 1rem !important;    /* Push text DOWN from the header */
+    margin-bottom: 1rem !important; /* Push text UP from the bottom */
+    padding-left: 1rem !important;  /* Keep text away from left wall */
+    padding-right: 1rem !important; /* Keep text away from right wall */
+}
+
+/* D. SPECIFIC OVERRIDES FOR 'WARNING' (Red Theme) */
+.admonition.warning {
+    background: rgba(40, 20, 25, 0.7) !important;
+    border-color: rgba(255, 51, 102, 0.4) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 
+                inset 0 0 20px rgba(255, 51, 102, 0.05);
+}
+
+.admonition.warning .admonition-title {
+    background: rgba(255, 51, 102, 0.1) !important;
+    border-bottom: 1px solid rgba(255, 51, 102, 0.4);
+    color: #ff3366 !important;
+}
+
+/* E. TERMINAL CODE BLOCKS */
+div[class^="highlight"] {
+    background: #050505 !important;
+    border: 1px solid #333 !important;
+    border-radius: 6px;
+    box-shadow: inset 0 0 10px #000;
+}
+
+
+
+/* --- 9. CINEMATIC LOAD ENGINE (RESTORED) --- */
+
+/* 1. The Blueprint */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(15px); /* Start slightly lower */
+        filter: blur(5px);           /* Optional: Start slightly blurry (High End look) */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* 2. The Execution Target */
+/* We target 'main' because it wraps all your content */
+main {
+    /* 0.6s = The perfect balance of "Smooth" vs "Fast" */
+    animation: fadeIn 0.6s ease-out;
+
+    /* CRITICAL FIX: This locks the "Start State" (Opacity 0)
+       before the browser has a chance to paint the screen. */
+    animation-fill-mode: both;
+
+    /* Ensure the hardware acceleration is on for smoother FPS */
+    will-change: transform, opacity, filter;
+}
+
+
+
+/* --- 10. MOBILE OPTIMIZATION LAYER (TUNED) --- */
+@media (max-width: 768px) {
+    /* 1. Logo: Keep it single line but smaller */
+    .sy-head-brand {
+        font-size: 1.0rem !important; 
+        white-space: nowrap !important;
+    }
+
+    /* 2. Page Titles: Reduce from 1.6rem to 1.35rem (Much cleaner) */
+    h1 {
+        font-size: 1.35rem !important;
+        line-height: 1.2 !important; /* Tighter vertical spacing */
+        overflow-wrap: break-word;
+        margin-bottom: 1rem !important;
+    }
+    
+    /* 3. Body Text: Slightly smaller for easier reading on phones */
+    p, li, .admonition {
+        font-size: 0.95rem !important;
+        line-height: 1.5 !important;
+    }
+
+    /* 4. Layout: Tight and efficient */
+    .sy-container {
+        width: 100% !important;
+        padding: 0 1rem !important; 
+    }
+
+    /* 5. Performance: Solid backgrounds for battery life */
+    .admonition {
+        backdrop-filter: none !important;
+        background: rgba(20, 30, 35, 0.98) !important;
+        box-shadow: none !important; /* Remove heavy shadows on mobile */
+        border: 1px solid rgba(0, 255, 225, 0.2) !important;
+    }
+}
