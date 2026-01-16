@@ -279,39 +279,59 @@ main {
 
 
 
-/* --- 10. MOBILE OPTIMIZATION LAYER (TUNED) --- */
+/* --- 10. MOBILE OPTIMIZATION (ULTRA COMPACT / TERMUX STYLE) --- */
 @media (max-width: 768px) {
-    /* 1. Logo: Keep it single line but smaller */
+    /* 1. Logo: Keep it tiny */
     .sy-head-brand {
-        font-size: 1.0rem !important; 
+        font-size: 0.9rem !important; 
         white-space: nowrap !important;
     }
 
-    /* 2. Page Titles: Reduce from 1.6rem to 1.35rem (Much cleaner) */
+    /* 2. Page Titles: drastically smaller to prevent wrapping/shouting */
     h1 {
-        font-size: 1.35rem !important;
-        line-height: 1.2 !important; /* Tighter vertical spacing */
+        font-size: 1.15rem !important; /* Barely larger than body text */
+        font-weight: 700 !important;
+        line-height: 1.2 !important;
+        margin-bottom: 0.75rem !important;
         overflow-wrap: break-word;
-        margin-bottom: 1rem !important;
     }
     
-    /* 3. Body Text: Slightly smaller for easier reading on phones */
+    /* 3. Body Text: The "Real Terminal" size (approx 13px) */
     p, li, .admonition {
-        font-size: 0.95rem !important;
-        line-height: 1.5 !important;
+        font-size: 0.85rem !important; 
+        line-height: 1.45 !important; /* Tight but readable */
     }
 
-    /* 4. Layout: Tight and efficient */
+    /* 4. Layout: Give it more side padding to avoid the "cramped" look */
     .sy-container {
         width: 100% !important;
-        padding: 0 1rem !important; 
+        padding: 0 1.2rem !important; 
     }
 
-    /* 5. Performance: Solid backgrounds for battery life */
+    /* 5. Performance: Kill all glass effects for smoother scrolling */
     .admonition {
         backdrop-filter: none !important;
-        background: rgba(20, 30, 35, 0.98) !important;
-        box-shadow: none !important; /* Remove heavy shadows on mobile */
-        border: 1px solid rgba(0, 255, 225, 0.2) !important;
+        background: rgba(20, 30, 35, 1) !important; /* 100% Solid opacity */
+        box-shadow: none !important;
+        border: 1px solid rgba(0, 255, 225, 0.15) !important;
     }
+
+    /* 6. Breadcrumbs: Hide on mobile (Cleaner) */
+    .sy-breadcrumbs {
+        display: none !important;
+    }
+
+}
+
+/* --- 12. NAVIGATION HIDE (CONFIRMED) --- */
+
+/* Targeted based on your inspection screenshot */
+div.navigation {
+    display: none !important;
+}
+
+/* Safety net: Also hit the specific next/prev containers */
+.page-info,
+.navigation-next {
+    display: none !important;
 }

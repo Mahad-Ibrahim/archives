@@ -2,13 +2,13 @@
 <html lang="en" data-accent-color="cyan" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Linux Kernel - mahad@archives documentation</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Daily Log" href="daily_log.html" /><link rel="prev" title="mahad@archives:~#" href="../index.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Kernel Space - mahad@archives documentation</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Daily Log" href="daily_log.html" /><link rel="prev" title="mahad@archives:~#" href="../index.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"dark");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=44020203" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=0dbc41d1" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=46b8394f" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
   --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
 }
 </style>
-    <meta property="og:type" content="website"/><meta property="og:title" content="Linux Kernel"/>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Kernel Space"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -30,7 +30,7 @@
       <strong>mahad@archives</strong>
     </a>
     <div class="sy-head-nav" id="head-nav">
-      <nav class="sy-head-links"><ul><li class="link"><a href="#">Kernel</a></li><li class="link"><a href="../projects/index.html">Projects</a></li></ul></nav>
+      <nav class="sy-head-links"><ul><li class="link"><a href="#">Kernel</a></li><li class="link"><a href="../projects/index.html">Projects</a></li><li class="link"><a href="../security/index.html">Security</a></li><li class="link"><a href="../journal/index.html">Journal</a></li></ul></nav>
       <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
   <input type="text" name="q" placeholder="Search" />
   <kbd>/</kbd>
@@ -58,23 +58,28 @@ data-aria-dark="Switch to auto color mode">
   <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
     <div class="sy-lside-inner md:sticky">
       <div class="sy-scrollbar p-6">
-        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Linux Kernel Journey</span></p>
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Navigation</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Linux Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="daily_log.html">Daily Log</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Kernel Space</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="daily_log.html">Daily Log</a></li>
 </ul>
-<p class="caption" role="heading" aria-level="3"><span class="caption-text">Engineering Projects</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../projects/tartarus_gate/index.html">Project Tartarus: Advanced Windows Implant Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../projects/mini_siem/index.html">Mini SIEM</a></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../projects/index.html">Engineering Projects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../projects/tartarus_gate/index.html">Project Tartarus: Advanced Windows Implant Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../projects/mini_siem/index.html">Mini SIEM</a></li>
 </ul>
-<p class="caption" role="heading" aria-level="3"><span class="caption-text">Security &amp; Malware</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../security/evasion/index.html">Evasion</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../security/reversing/index.html">Reversing</a></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../security/index.html">Security &amp; Malware</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../security/evasion/index.html">Evasion Research</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../security/evasion/intro.html">EDR Evasion Intro</a></li>
 </ul>
-<p class="caption" role="heading" aria-level="3"><span class="caption-text">The Dev Journal</span></p>
-<ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../security/reversing/index.html">Reverse Engineering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../security/reversing/ghidra_setup.html">Ghidra Workflow</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../journal/index.html">Journal</a></li>
 </ul>
 
@@ -103,7 +108,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="1" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Linux Kernel</strong>
+        <strong itemprop="name">Kernel Space</strong>
         <meta itemprop="position" content="2" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -116,9 +121,15 @@ data-aria-dark="Switch to auto color mode">
 </div><div class="flex flex-col break-words justify-between">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
-          <section id="linux-kernel">
-<h1>Linux Kernel<a class="headerlink" href="#linux-kernel" title="Link to this heading">¶</a></h1>
-<p>Coming soon…</p>
+          <section id="kernel-space">
+<h1>Kernel Space<a class="headerlink" href="#kernel-space" title="Link to this heading">¶</a></h1>
+<p>Research into the Linux Kernel source code, subsystems, and patches.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Research Log</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="daily_log.html">Daily Log</a></li>
+</ul>
+</div>
 </section>
 
         </article><button class="back-to-top" type="button">
