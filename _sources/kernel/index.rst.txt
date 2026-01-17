@@ -1,10 +1,10 @@
 Kernel Space
 ============
 
-Research into the Linux Kernel source code, subsystems, and patches.
+Research into the Linux Kernel source code, subsystems, and accepted patches. 
 
 .. toctree::
    :maxdepth: 1
-   :caption: Research Log
+   :caption: Accepted Patches
 
-   daily_log
+   Logs

@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="cyan" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Daily Log - mahad@archives documentation</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Engineering Projects" href="../projects/index.html" /><link rel="prev" title="Kernel Space" href="index.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Upstream Contributions - mahad@archives documentation</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Engineering Projects" href="../projects/index.html" /><link rel="prev" title="Kernel Space" href="index.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"dark");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -18,7 +18,7 @@
   --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
 }
 </style>
-    <meta property="og:type" content="website"/><meta property="og:title" content="Daily Log"/>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Upstream Contributions"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -61,7 +61,7 @@ data-aria-dark="Switch to auto color mode">
         <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Navigation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Kernel Space</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Daily Log</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Upstream Contributions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../projects/index.html">Engineering Projects</a><ul>
@@ -92,7 +92,11 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#current-status">Current Status</a></li>
+<li><a class="reference internal" href="#patch-log">Patch Log</a></li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -112,7 +116,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Daily Log</strong>
+        <strong itemprop="name">Upstream Contributions</strong>
         <meta itemprop="position" content="3" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -125,9 +129,80 @@ data-aria-dark="Switch to auto color mode">
 </div><div class="flex flex-col break-words justify-between">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
-          <section id="daily-log">
-<h1>Daily Log<a class="headerlink" href="#daily-log" title="Link to this heading">¶</a></h1>
-<p>Coming soon…</p>
+          <section id="upstream-contributions">
+<h1>Upstream Contributions<a class="headerlink" href="#upstream-contributions" title="Link to this heading">¶</a></h1>
+<p>Verified patches that have been accepted into the Mainline Linux Kernel.</p>
+<section id="current-status">
+<h2>Current Status<a class="headerlink" href="#current-status" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Total Accepted Patches:</strong> 8</p></li>
+<li><p><strong>Subsystems Touched:</strong> <code class="docutils literal notranslate"><span class="pre">drivers\staging\rtl8723bs</span></code></p></li>
+</ul>
+</section>
+<section id="patch-log">
+<h2>Patch Log<a class="headerlink" href="#patch-log" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 65.0%" />
+<col style="width: 20.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Date</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Reviewed By</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2026-01-17</p></td>
+<td><p>rtl8723bs: Fix block comment alignment in HalHWImg8723B_RF.c</p></td>
+<td><p>Greg Kroah-Hartman</p></td>
+</tr>
+<tr class="row-odd"><td><p>2026-01-17</p></td>
+<td><p>rtl8723bs: Fix block comment alignment in HalHWImg8723B_BB.c</p></td>
+<td><p>Greg Kroah-Hartman</p></td>
+</tr>
+<tr class="row-even"><td><p>2026-01-17</p></td>
+<td><p>rtl8723bs: Fix spacing coding style issues in HalHWImg8723B_MAC.c</p></td>
+<td><p>Greg Kroah-Hartman</p></td>
+</tr>
+<tr class="row-odd"><td><p>2026-01-17</p></td>
+<td><p>rtl8723bs: Fix block comment alignment in HalHWImg8723B_MAC.c</p></td>
+<td><p>Greg Kroah-Hartman</p></td>
+</tr>
+<tr class="row-even"><td><p>2026-01-17</p></td>
+<td><p>rtl8723bs: Fix spaces around operator checks in HalHWImg8723B_MAC.c</p></td>
+<td><p>Greg Kroah-Hartman</p></td>
+</tr>
+<tr class="row-odd"><td><p>2026-01-17</p></td>
+<td><p>staging: rtl8723bs: Fix spacing coding style issues in HalHWImg8723B_BB.c</p></td>
+<td><p>Greg Kroah-Hartman</p></td>
+</tr>
+<tr class="row-even"><td><p>2026-01-16</p></td>
+<td><p>staging: rtl8723bs: Fix block comment alignment in HalHWImg8723B_RF.c</p></td>
+<td><p>Greg Kroah-Hartman</p></td>
+</tr>
+<tr class="row-odd"><td><p>2026-01-16</p></td>
+<td><p>staging: rtl8723bs: Fix block comment alignment in HalHWImg8723B_MAC.c</p></td>
+<td><p>Greg Kroah-Hartman</p></td>
+</tr>
+<tr class="row-even"><td><p>2026-01-16</p></td>
+<td><p>staging: rtl8723bs: Fix block comment alignment in HalHWImg8723B_BB.c</p></td>
+<td><p>Greg Kroah-Hartman</p></td>
+</tr>
+<tr class="row-odd"><td><p>2026-01-16</p></td>
+<td><p>Fix spaces around operator checks in HalHWImg8723B_MAC.c</p></td>
+<td><p>Greg Kroah-Hartman</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can verify these commits by searching for my email in the <cite>Linux Kernel Lore</cite>, or simply clicking <a class="reference external" href="https://lore.kernel.org/all/?q=mahad.ibrahim.dev%40gmail.com">here</a>.</p>
+</div>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
