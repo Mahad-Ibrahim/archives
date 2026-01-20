@@ -34,12 +34,13 @@ Deep Dive: The "Pseudo-Header"
 ==============================
 
 The OSI model demands strict separation:
-* **IP (Layer 3)** handles Source/Dest IP Addresses.
-* **UDP/TCP (Layer 4)** handles Source/Dest Ports.
+   * **IP (Layer 3)** handles Source/Dest IP Addresses.
+   * **UDP/TCP (Layer 4)** handles Source/Dest Ports.
 
 **The Problem:** Imagine a buggy router. It receives a UDP packet meant for ``192.168.1.5`` but accidentally forwards it to ``192.168.1.99``.
-* The **IP Layer** at .99 accepts it (because it just looks at the bits).
-* The **UDP Layer** at .99 looks at the port (e.g., Port 80). If .99 happens to have a web server running, it accepts the packet.
+
+   * The **IP Layer** at .99 accepts it (because it just looks at the bits).
+   * The **UDP Layer** at .99 looks at the port (e.g., Port 80). If .99 happens to have a web server running, it accepts the packet.
 
 **Result:** You just injected garbage data into the wrong server because UDP/TCP usually don't look at IP addresses.
 

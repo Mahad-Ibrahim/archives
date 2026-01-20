@@ -8,4 +8,5 @@ This contains all my notes, it can be related to course work, my personal study,
    :caption: Notes
 
    networking/index
+   hardware/index
 
