@@ -5,9 +5,7 @@ This contains all my notes, it can be related to course work, my personal study,
 
 .. toctree::
    :maxdepth: 2
-   :caption: Networking
+   :caption: Notes
 
-   networking/data_link_and_flow_control
-   networking/logical_addressing
-
+   networking/index
 
