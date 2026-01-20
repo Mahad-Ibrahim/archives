@@ -1,0 +1,180 @@
+========================================
+8086 Architecture: The Split Logic
+========================================
+
+THE PROBLEM: THE VON NEUMANN BOTTLENECK
+=======================================
+
+The 8086 processor is defined by its **"Split Architecture"**. But why split it?
+
+It is split because previous processors (like the 8080/8085) had a massive problem. Before discussing the problem, we need to define the components that make up the silicon brain.
+
+SYSTEM DEFINITIONS
+==================
+
+We must first initialize our variables.
+
+BIU: Bus Interface Unit
+-----------------------
+The BIU is the part of the processor that handles socialization. It is the **"Mouth"** and **"Eyes"** of the Processor.
+
+* **Function:** If the processor needs anything—a value, a memory location, *anything*—it has to come **FROM** the BIU.
+* **Constraint:** It is the only component physically connected to the outside world (System Bus).
+
+EU: Execution Unit
+------------------
+The Execution Unit is the **"Brains"** of the operation. It is the part of the processor that can *think* and execute assembly instructions.
+
+* **Analogy:** Imagine if you could divide your brain into multiple parts. One part does calculations, another makes decisions.
+* **Role:** The EU is the "Manager" of all this. It decides which thing goes where. If an instruction needs addition, the EU routes it to the ALU.
+
+ALU: Arithmetic Logic Unit
+--------------------------
+The **Dumb Solver**.
+
+* **Status:** Blind.
+* **Role:** It solves things absolutely blindly. It has no other purpose than to crunch the numbers fed to it by the EU.
+
+VISUALIZING THE ARCHITECTURE
+============================
+
+To understand the fundamental shift in design, we must compare the legacy approach versus the 8086 breakthrough.
+
+.. figure:: /_static/images/legacy_bottleneck_diagram.png
+   :alt: Diagram of legacy unified architecture showing CPU waiting for system bus.
+   :align: center
+   :width: 80%
+
+   **Figure 1: The Legacy "Unified" Architecture (Pre-8086)**
+   In older designs, the brain (CPU) and the eyes (Bus) operated in rigid lockstep. If the bus was busy fetching data from memory, the entire CPU had to sit idle and wait.
+
+.. figure:: /_static/images/8086_split_diagram.png
+   :alt: Diagram of 8086 split architecture showing separate EU and BIU units.
+   :align: center
+   :width: 80%
+
+   **Figure 2: The 8086 Split Architecture (Decoupled)**
+   The 8086 physically separates the execution logic (EU) from data transport logic (BIU). They operate asynchronously, allowing the "eyes" to look ahead while the "brain" is thinking about the previous item.
+
+THE BOTTLENECK (SYNC_ERROR)
+===========================
+
+The significance of the **Split Architecture** is that it allows neither the BIU to wait for the EU nor the EU to wait for the BIU.
+
+**What does that mean?**
+
+.. note::
+   **VISUALIZATION**
+
+   Imagine if your eyes had to wait for your brain to process information first before they could see again.
+
+* **The Lag:** Since the BIU is the "Eyes" and "Mouth" of the processor, having it wait for the information to finish processing made things slow.
+* **The Old Way:** The EU would solve a problem, then ask the BIU to go get the next instruction. Very, very inefficient.
+
+THE SOLUTION: DECOUPLED LOGIC
+=============================
+
+Why don't we do something smart? Why don't we separate the BIU from the EU?
+
+Essentially, why don't we allow the BIU to go and fetch things it needs **beforehand**, while the EU doesn't have to keep reminding the eyes to *"Hey, go and look for this thing now."*
+
+That is exactly what the 8086 architecture is. It basically separates the **Eyes** from the **Brain**.
+
+THE INSTRUCTION QUEUE
+=====================
+
+.. admonition:: SYSTEM ALERT
+   :class: attention
+
+   **TECHNICAL ADDENDUM**
+
+   For the "Eyes" (BIU) to fetch data while the "Brain" (EU) is busy, the Eyes need a place to store the images before the Brain is ready.
+
+   * **The Component:** **The Instruction Queue** (6-byte FIFO).
+   * **The Function:** This acts as **Short-Term Memory**. The BIU prefetches instructions and stacks them in the Queue. When the EU finishes its current thought, it doesn't have to look at the world (RAM); it just pulls the next thought instantly from Short-Term Memory.
+
+
+
+SYSTEM REGISTERS: THE WORKSPACE
+===============================
+
+Now, what are these registers?
+
+.. note::
+   **CONCEPT**
+
+   Registers are straightforward: imagine them as **temporary file cabinets** for the EU and BIU. The EU and BIU obviously need a place where they can work and store things, right? That is where registers come in.
+
+However, not all registers are created equal.
+
+If you shared registers between the EU and BIU, that would destroy the entire purpose of the split architecture.
+   * **The Conflict:** The BIU would need to know *"What was the last place I was looking in?"* while the EU would need to know *"What was the last thing I thought about?"*
+   * **The Solution:** Since they are doing separate things, they need separate workspaces.
+
+The distinction between these registers—who they belong to—is what gives them their names.
+
+BIU REGISTERS (THE EYES)
+------------------------
+
+The registers that belong to the BIU are often called **Segment Registers** or **Special Purpose Registers**.
+
+These handle the **"Eye"** operations. They are used for navigation—fetching instructions and finding the correct memory blocks. Obviously, a value cannot be taken if the BIU doesn't know where the Data Portion even starts.
+
+.. list-table::
+   :widths: 15 85
+   :header-rows: 1
+
+   * - Register
+     - Function (Navigation)
+   * - **CS** (Code Segment)
+     - **The Script Location.** This tells the BIU where the executable code begins. The EU has no need for this because knowing *where* the code lives is an "Eye" problem, not a "Thinking" problem.
+   * - **DS** (Data Segment)
+     - **The Variable Location.** Points to where variables and data are stored.
+   * - **SS** (Stack Segment)
+     - **The Scratchpad Location.** Points to the memory area used for the stack (temporary storage).
+   * - **IP** (Instruction Pointer)
+     - **The Finger.** It points to the *next* instruction to be fetched. The programmer cannot directly touch this; only the BIU updates it as it reads.
+
+EU REGISTERS (THE BRAIN)
+------------------------
+
+The registers that belong to the EU are called **General Purpose Registers**.
+
+These are the "Thinking" parts. They are called "General Purpose" because they are used for multiple purposes. While each has a specific job (like Math or Counting), they can also be used simply to hold data—hence the name.
+
+.. list-table::
+   :widths: 15 85
+   :header-rows: 1
+
+   * - Register
+     - Function (Execution)
+   * - **AX** (Accumulator)
+     - **The Calculator.** Used for arithmetic and logic. This is clearly a "Brain" part. Most math (MUL, DIV) defaults to happening here.
+   * - **BX** (Base)
+     - **The Pointer.** The only general register that can point to memory (acts like an index finger for data).
+   * - **CX** (Count)
+     - **The Iterator.** Used automatically by Loop instructions to count down.
+   * - **DX** (Data)
+     - **The Aux.** Used for I/O operations and to hold the overflow from large multiplications (DX:AX).
+
+INDEX & POINTER REGISTERS (THE HANDS)
+-------------------------------------
+
+Technically part of the EU (used for offsetting addresses), these act as the "Hands" that fine-tune where the "Eyes" look.
+
+.. list-table::
+   :widths: 15 85
+   :header-rows: 1
+
+   * - Register
+     - Function (Offset)
+   * - **SI** (Source Index)
+     - Used for string operations (copying *from* here).
+   * - **DI** (Dest Index)
+     - Used for string operations (copying *to* here).
+   * - **SP** (Stack Pointer)
+     - Points to the current top of the stack.
+   * - **BP** (Base Pointer)
+     - Used to navigate inside the stack (mostly for function parameters).
+
+

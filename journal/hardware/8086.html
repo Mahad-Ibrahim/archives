@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="cyan" data-content_root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>8086 Architecture: The Split Logic - mahad@archives documentation</title><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="prev" title="Hardware" href="index.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"dark");
+  </script><link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../../_static/shibuya.css?v=44020203" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=dc970a10" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="8086 Architecture: The Split Logic"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../index.html">
+      
+      
+      <strong>mahad@archives</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../../kernel/index.html">Kernel</a></li><li class="link"><a href="../../projects/index.html">Projects</a></li><li class="link"><a href="../../security/index.html">Security</a></li><li class="link"><a href="../index.html">Journal</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/Mahad-Ibrahim" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Navigation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel Space</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../kernel/Logs.html">Upstream Contributions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../projects/index.html">Engineering Projects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../projects/tartarus_gate/index.html">Project Tartarus: Advanced Windows Implant Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../projects/mini_siem/index.html">Mini SIEM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security &amp; Malware</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../security/evasion/index.html">Evasion Research</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../security/evasion/intro.html">EDR Evasion Intro</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../security/reversing/index.html">Reverse Engineering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../security/reversing/ghidra_setup.html">Ghidra Workflow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Journal</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../networking/index.html">Networking</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../networking/data_link_and_flow_control.html">Data Link Control &amp; Flow Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../networking/logical_addressing.html">Logical Addressing (IPv4)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../networking/UDP.html">UDP: The “Thin Wrapper”</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Hardware</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">8086 Architecture: The Split Logic</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#the-problem-the-von-neumann-bottleneck">THE PROBLEM: THE VON NEUMANN BOTTLENECK</a></li>
+<li><a class="reference internal" href="#system-definitions">SYSTEM DEFINITIONS</a><ul>
+<li><a class="reference internal" href="#biu-bus-interface-unit">BIU: Bus Interface Unit</a></li>
+<li><a class="reference internal" href="#eu-execution-unit">EU: Execution Unit</a></li>
+<li><a class="reference internal" href="#alu-arithmetic-logic-unit">ALU: Arithmetic Logic Unit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#visualizing-the-architecture">VISUALIZING THE ARCHITECTURE</a></li>
+<li><a class="reference internal" href="#the-bottleneck-sync-error">THE BOTTLENECK (SYNC_ERROR)</a></li>
+<li><a class="reference internal" href="#the-solution-decoupled-logic">THE SOLUTION: DECOUPLED LOGIC</a></li>
+<li><a class="reference internal" href="#the-instruction-queue">THE INSTRUCTION QUEUE</a></li>
+<li><a class="reference internal" href="#system-registers-the-workspace">SYSTEM REGISTERS: THE WORKSPACE</a><ul>
+<li><a class="reference internal" href="#biu-registers-the-eyes">BIU REGISTERS (THE EYES)</a></li>
+<li><a class="reference internal" href="#eu-registers-the-brain">EU REGISTERS (THE BRAIN)</a></li>
+<li><a class="reference internal" href="#index-pointer-registers-the-hands">INDEX &amp; POINTER REGISTERS (THE HANDS)</a></li>
+</ul>
+</li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">mahad@archives</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">Journal</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">Hardware</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="3" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">8086 Architecture: The Split Logic</strong>
+        <meta itemprop="position" content="4" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <article class="yue" role="main">
+          <section id="architecture-the-split-logic">
+<h1>8086 Architecture: The Split Logic<a class="headerlink" href="#architecture-the-split-logic" title="Link to this heading">¶</a></h1>
+<section id="the-problem-the-von-neumann-bottleneck">
+<h2>THE PROBLEM: THE VON NEUMANN BOTTLENECK<a class="headerlink" href="#the-problem-the-von-neumann-bottleneck" title="Link to this heading">¶</a></h2>
+<p>The 8086 processor is defined by its <strong>“Split Architecture”</strong>. But why split it?</p>
+<p>It is split because previous processors (like the 8080/8085) had a massive problem. Before discussing the problem, we need to define the components that make up the silicon brain.</p>
+</section>
+<section id="system-definitions">
+<h2>SYSTEM DEFINITIONS<a class="headerlink" href="#system-definitions" title="Link to this heading">¶</a></h2>
+<p>We must first initialize our variables.</p>
+<section id="biu-bus-interface-unit">
+<h3>BIU: Bus Interface Unit<a class="headerlink" href="#biu-bus-interface-unit" title="Link to this heading">¶</a></h3>
+<p>The BIU is the part of the processor that handles socialization. It is the <strong>“Mouth”</strong> and <strong>“Eyes”</strong> of the Processor.</p>
+<ul class="simple">
+<li><p><strong>Function:</strong> If the processor needs anything—a value, a memory location, <em>anything</em>—it has to come <strong>FROM</strong> the BIU.</p></li>
+<li><p><strong>Constraint:</strong> It is the only component physically connected to the outside world (System Bus).</p></li>
+</ul>
+</section>
+<section id="eu-execution-unit">
+<h3>EU: Execution Unit<a class="headerlink" href="#eu-execution-unit" title="Link to this heading">¶</a></h3>
+<p>The Execution Unit is the <strong>“Brains”</strong> of the operation. It is the part of the processor that can <em>think</em> and execute assembly instructions.</p>
+<ul class="simple">
+<li><p><strong>Analogy:</strong> Imagine if you could divide your brain into multiple parts. One part does calculations, another makes decisions.</p></li>
+<li><p><strong>Role:</strong> The EU is the “Manager” of all this. It decides which thing goes where. If an instruction needs addition, the EU routes it to the ALU.</p></li>
+</ul>
+</section>
+<section id="alu-arithmetic-logic-unit">
+<h3>ALU: Arithmetic Logic Unit<a class="headerlink" href="#alu-arithmetic-logic-unit" title="Link to this heading">¶</a></h3>
+<p>The <strong>Dumb Solver</strong>.</p>
+<ul class="simple">
+<li><p><strong>Status:</strong> Blind.</p></li>
+<li><p><strong>Role:</strong> It solves things absolutely blindly. It has no other purpose than to crunch the numbers fed to it by the EU.</p></li>
+</ul>
+</section>
+</section>
+<section id="visualizing-the-architecture">
+<h2>VISUALIZING THE ARCHITECTURE<a class="headerlink" href="#visualizing-the-architecture" title="Link to this heading">¶</a></h2>
+<p>To understand the fundamental shift in design, we must compare the legacy approach versus the 8086 breakthrough.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../_images/legacy_bottleneck_diagram.png"><img alt="Diagram of legacy unified architecture showing CPU waiting for system bus." src="../../_images/legacy_bottleneck_diagram.png" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><strong>Figure 1: The Legacy “Unified” Architecture (Pre-8086)</strong>
+In older designs, the brain (CPU) and the eyes (Bus) operated in rigid lockstep. If the bus was busy fetching data from memory, the entire CPU had to sit idle and wait.</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../../_images/8086_split_diagram.png"><img alt="Diagram of 8086 split architecture showing separate EU and BIU units." src="../../_images/8086_split_diagram.png" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><strong>Figure 2: The 8086 Split Architecture (Decoupled)</strong>
+The 8086 physically separates the execution logic (EU) from data transport logic (BIU). They operate asynchronously, allowing the “eyes” to look ahead while the “brain” is thinking about the previous item.</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="the-bottleneck-sync-error">
+<h2>THE BOTTLENECK (SYNC_ERROR)<a class="headerlink" href="#the-bottleneck-sync-error" title="Link to this heading">¶</a></h2>
+<p>The significance of the <strong>Split Architecture</strong> is that it allows neither the BIU to wait for the EU nor the EU to wait for the BIU.</p>
+<p><strong>What does that mean?</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>VISUALIZATION</strong></p>
+<p>Imagine if your eyes had to wait for your brain to process information first before they could see again.</p>
+</div>
+<ul class="simple">
+<li><p><strong>The Lag:</strong> Since the BIU is the “Eyes” and “Mouth” of the processor, having it wait for the information to finish processing made things slow.</p></li>
+<li><p><strong>The Old Way:</strong> The EU would solve a problem, then ask the BIU to go get the next instruction. Very, very inefficient.</p></li>
+</ul>
+</section>
+<section id="the-solution-decoupled-logic">
+<h2>THE SOLUTION: DECOUPLED LOGIC<a class="headerlink" href="#the-solution-decoupled-logic" title="Link to this heading">¶</a></h2>
+<p>Why don’t we do something smart? Why don’t we separate the BIU from the EU?</p>
+<p>Essentially, why don’t we allow the BIU to go and fetch things it needs <strong>beforehand</strong>, while the EU doesn’t have to keep reminding the eyes to <em>“Hey, go and look for this thing now.”</em></p>
+<p>That is exactly what the 8086 architecture is. It basically separates the <strong>Eyes</strong> from the <strong>Brain</strong>.</p>
+</section>
+<section id="the-instruction-queue">
+<h2>THE INSTRUCTION QUEUE<a class="headerlink" href="#the-instruction-queue" title="Link to this heading">¶</a></h2>
+<div class="attention admonition">
+<p class="admonition-title">SYSTEM ALERT</p>
+<p><strong>TECHNICAL ADDENDUM</strong></p>
+<p>For the “Eyes” (BIU) to fetch data while the “Brain” (EU) is busy, the Eyes need a place to store the images before the Brain is ready.</p>
+<ul class="simple">
+<li><p><strong>The Component:</strong> <strong>The Instruction Queue</strong> (6-byte FIFO).</p></li>
+<li><p><strong>The Function:</strong> This acts as <strong>Short-Term Memory</strong>. The BIU prefetches instructions and stacks them in the Queue. When the EU finishes its current thought, it doesn’t have to look at the world (RAM); it just pulls the next thought instantly from Short-Term Memory.</p></li>
+</ul>
+</div>
+</section>
+<section id="system-registers-the-workspace">
+<h2>SYSTEM REGISTERS: THE WORKSPACE<a class="headerlink" href="#system-registers-the-workspace" title="Link to this heading">¶</a></h2>
+<p>Now, what are these registers?</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>CONCEPT</strong></p>
+<p>Registers are straightforward: imagine them as <strong>temporary file cabinets</strong> for the EU and BIU. The EU and BIU obviously need a place where they can work and store things, right? That is where registers come in.</p>
+</div>
+<p>However, not all registers are created equal.</p>
+<dl class="simple">
+<dt>If you shared registers between the EU and BIU, that would destroy the entire purpose of the split architecture.</dt><dd><ul class="simple">
+<li><p><strong>The Conflict:</strong> The BIU would need to know <em>“What was the last place I was looking in?”</em> while the EU would need to know <em>“What was the last thing I thought about?”</em></p></li>
+<li><p><strong>The Solution:</strong> Since they are doing separate things, they need separate workspaces.</p></li>
+</ul>
+</dd>
+</dl>
+<p>The distinction between these registers—who they belong to—is what gives them their names.</p>
+<section id="biu-registers-the-eyes">
+<h3>BIU REGISTERS (THE EYES)<a class="headerlink" href="#biu-registers-the-eyes" title="Link to this heading">¶</a></h3>
+<p>The registers that belong to the BIU are often called <strong>Segment Registers</strong> or <strong>Special Purpose Registers</strong>.</p>
+<p>These handle the <strong>“Eye”</strong> operations. They are used for navigation—fetching instructions and finding the correct memory blocks. Obviously, a value cannot be taken if the BIU doesn’t know where the Data Portion even starts.</p>
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 85.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Register</p></th>
+<th class="head"><p>Function (Navigation)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>CS</strong> (Code Segment)</p></td>
+<td><p><strong>The Script Location.</strong> This tells the BIU where the executable code begins. The EU has no need for this because knowing <em>where</em> the code lives is an “Eye” problem, not a “Thinking” problem.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>DS</strong> (Data Segment)</p></td>
+<td><p><strong>The Variable Location.</strong> Points to where variables and data are stored.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>SS</strong> (Stack Segment)</p></td>
+<td><p><strong>The Scratchpad Location.</strong> Points to the memory area used for the stack (temporary storage).</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>IP</strong> (Instruction Pointer)</p></td>
+<td><p><strong>The Finger.</strong> It points to the <em>next</em> instruction to be fetched. The programmer cannot directly touch this; only the BIU updates it as it reads.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="eu-registers-the-brain">
+<h3>EU REGISTERS (THE BRAIN)<a class="headerlink" href="#eu-registers-the-brain" title="Link to this heading">¶</a></h3>
+<p>The registers that belong to the EU are called <strong>General Purpose Registers</strong>.</p>
+<p>These are the “Thinking” parts. They are called “General Purpose” because they are used for multiple purposes. While each has a specific job (like Math or Counting), they can also be used simply to hold data—hence the name.</p>
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 85.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Register</p></th>
+<th class="head"><p>Function (Execution)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>AX</strong> (Accumulator)</p></td>
+<td><p><strong>The Calculator.</strong> Used for arithmetic and logic. This is clearly a “Brain” part. Most math (MUL, DIV) defaults to happening here.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>BX</strong> (Base)</p></td>
+<td><p><strong>The Pointer.</strong> The only general register that can point to memory (acts like an index finger for data).</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>CX</strong> (Count)</p></td>
+<td><p><strong>The Iterator.</strong> Used automatically by Loop instructions to count down.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>DX</strong> (Data)</p></td>
+<td><p><strong>The Aux.</strong> Used for I/O operations and to hold the overflow from large multiplications (DX:AX).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="index-pointer-registers-the-hands">
+<h3>INDEX &amp; POINTER REGISTERS (THE HANDS)<a class="headerlink" href="#index-pointer-registers-the-hands" title="Link to this heading">¶</a></h3>
+<p>Technically part of the EU (used for offsetting addresses), these act as the “Hands” that fine-tune where the “Eyes” look.</p>
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 85.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Register</p></th>
+<th class="head"><p>Function (Offset)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>SI</strong> (Source Index)</p></td>
+<td><p>Used for string operations (copying <em>from</em> here).</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>DI</strong> (Dest Index)</p></td>
+<td><p>Used for string operations (copying <em>to</em> here).</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>SP</strong> (Stack Pointer)</p></td>
+<td><p>Points to the current top of the stack.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>BP</strong> (Base Pointer)</p></td>
+<td><p>Used to navigate inside the stack (mostly for function parameters).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="index.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Hardware</div></div>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2026, Mahad Ibrahim</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/Mahad-Ibrahim" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/shibuya.js?v=cac61aee"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+      <script defer="defer" src="../../_static/js/smooth_scroll.js?v=5f731fdf"></script></body>
+</html>
